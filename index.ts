@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-12 11:22:28
+ * @LastEditTime: 2022-06-12 11:52:40
  * @LastEditors: theL07
  */
 interface Coordinates {
@@ -88,7 +88,7 @@ function uniqueBy<T extends {}> (arr: T[], key: string = 'name') {
  */
 function isMobile () {
   const reg = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-  return navigator.userAgent.match(reg)
+  return !!navigator.userAgent.match(reg)
 }
 
 /**
