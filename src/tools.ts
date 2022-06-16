@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-16 11:14:00
+ * @LastEditTime: 2022-06-16 21:37:05
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/tools'
@@ -46,20 +46,11 @@ function computedCoordDistance (startCoord: ToolTypes.Coordinates, endCoord: Too
 }
 
 /**
- * 判断是否为移动端
- * @returns boolean
- */
-function isMobile () {
-  const reg = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-  return !!navigator.userAgent.match(reg)
-}
-
-/**
  * 延迟执行并返回一个Promise
  * @param time 延迟时间 ms number
  * @returns Promise
  */
-function delay (time: number = 800): Promise<void> {
+function delay (time = 800): Promise<void> {
   return new Promise((resolve) => {
     const timer = setTimeout(() => {
       clearTimeout(timer)
@@ -72,9 +63,9 @@ function delay (time: number = 800): Promise<void> {
  * 数组对象根据某个属性值去重
  * @param arr 数组 [{}, {}, {}]
  * @param key 字段名
- * @returns 去重数组 [{}]
+ * @returns arr 去重数组 [{}]
  */
-function uniqueBy<T extends Record<string, unknown>> (arr: T[], key: string = 'name') {
+function uniqueBy<T extends Record<string, unknown>> (arr: T[], key = 'name') {
   const res = new Map()
   const result = arr.filter(item => item[key])
   return result.filter(item => {
@@ -89,7 +80,7 @@ function uniqueBy<T extends Record<string, unknown>> (arr: T[], key: string = 'n
  * @param isFalling 是否降序 boolean
  * @returns arr 排序后数组
  */
-function sortBy<T extends Record<string, unknown>> (arr: T[], key: string = 'name', isFalling: boolean = false) {
+function sortBy<T extends Record<string, unknown>> (arr: T[], key = 'name', isFalling = false) {
   return arr.sort((a, b) => {
     const numA = Number(a[key])
     const numB = Number(b[key])
@@ -103,8 +94,12 @@ function sortBy<T extends Record<string, unknown>> (arr: T[], key: string = 'nam
  * @param row 合并数量 number
  * @returns 转为二维数组 [[], [], []]
  */
-function convertArray<T> (arr: T[], row: number = 3) {
-  const result = []
+function convertArray<T> (arr: T[], row?: number) {
+  if (!arr.length) {
+    return []
+  }
+  const result: T[][] = []
+  row = row || 2
   for (let i = 0; i < arr.length; i += row) {
     result.push(arr.slice(i, i + row))
   }
@@ -116,9 +111,9 @@ function convertArray<T> (arr: T[], row: number = 3) {
  * @param fn 函数 Function
  * @param delay 延时时间 ms number
  */
-const debounce = (fn: Function, delay: number = 300) => {
+function debounce (fn: Function, delay = 500) {
   let timer: ReturnType<typeof setTimeout>
-  return  (...args: unknown[]) => {
+  return  function (...args: unknown[]) {
     if (timer) {
       clearTimeout(timer)
     }
@@ -133,9 +128,9 @@ const debounce = (fn: Function, delay: number = 300) => {
  * @param fn 函数 Function
  * @param delay 节流时长 ms number
  */
-const throttle = (fn: Function, delay: number = 300)  => {
+ function throttle (fn: Function, delay = 500) {
   let lastTime = 0
-  return (...args: unknown[]) => {
+  return function (...args: unknown[]) {
     const now = Date.now()
     if (now - lastTime > delay) {
       lastTime = now
@@ -151,7 +146,7 @@ const throttle = (fn: Function, delay: number = 300)  => {
  * @param max 最大有效字符长度
  * @returns boolean
  */
-function checkName (name: string, min: number = 1, max: number = 20) {
+function checkName (name: string, min = 1, max = 20) {
   name = name.trim()
   const reg = new RegExp(`^[\\u4E00-\\u9FA5_a-zA-Z\\s]{${min},${max}}$`)
   return reg.test(name)
@@ -198,6 +193,18 @@ function getQueryString (name: string) {
   return null
 }
 
+// 获取URL hash后参数
+function getHashQueryString (name: string) {
+  const after = window.location.href.split('?')[1]
+  if (after) {
+    const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
+    const r = after.match(reg)
+    if (r != null) return decodeURIComponent(r[2])
+    return null
+  }
+  return null
+}
+
 /**
  * 格式化时间
  * @param data 数据对象
@@ -231,116 +238,8 @@ function formatTime (data: ToolTypes.FormatTimeType) {
  * @param length 字符长度
  * @returns string '01' '008'
  */
-function numZeroPadding (n: number, length: number = 2) {
+function numZeroPadding (n: number, length = 2) {
   return (Array(length).join('0') + n).slice(-length)
-}
-
-/**
- * 获取当前网络类型
- * @returns string
- */
-function getNetworkType () {
-  const ua = navigator.userAgent
-  let networkStr = ''
-  if (ua.match(/NetType\/\w+/)) {
-    networkStr = ua.match(/NetType\/\w+/)![0]
-  } else {
-    networkStr = 'NetType/other'
-  }
-  networkStr = networkStr.toLowerCase().replace('nettype/', '')
-  let networkType
-  switch (networkStr) {
-    case 'wifi':
-      networkType = 'wifi'
-      break
-    case '4g':
-      networkType = '4g'
-      break
-    case '3g':
-      networkType = '3g'
-      break
-    case '3gnet':
-      networkType = '3g'
-      break
-    case '2g':
-      networkType = '2g'
-      break
-    default:
-      networkType = 'other'
-  }
-  return networkType
-}
-
-/**
- * 获取操作系统类型
- * @returns 系统名称
- */
-function getOS () {
-  const ua = navigator.userAgent
-  let os = ''
-  if (ua.match(/Windows/)) {
-    os = 'Windows'
-  } else if (ua.match(/Mac/)) {
-    os = 'Mac'
-  } else if (ua.match(/Linux/)) {
-    os = 'Linux'
-  } else if (ua.match(/Android/)) {
-    os = 'Android'
-  } else if (ua.match(/iPhone/)) {
-    os = 'iPhone'
-  } else if (ua.match(/iPad/)) {
-    os = 'iPad'
-  } else {
-    os = 'other'
-  }
-  return os
-}
-
-/**
- * 获取操作系统版本
- * @returns string
- */
-function getOSVersion () {
-  const ua = navigator.userAgent
-  let osVersion = ''
-  if (ua.match(/Windows NT/)) {
-    osVersion = ua.match(/Windows NT/)![0]
-  } else if (ua.match(/Mac OS/)) {
-    osVersion = ua.match(/Mac OS/)![0]
-  } else if (ua.match(/Linux/)) {
-    osVersion = ua.match(/Linux/)![0]
-  } else if (ua.match(/Android/)) {
-    osVersion = ua.match(/Android/)![0]
-  } else if (ua.match(/iPhone/)) {
-    osVersion = ua.match(/iPhone/)![0]
-  } else if (ua.match(/iPad/)) {
-    osVersion = ua.match(/iPad/)![0]
-  } else {
-    osVersion = 'other'
-  }
-  return osVersion
-}
-
-/**
- * 获取当前操作环境是否为微信浏览器或微信小程序
- * @params 微信jssdk对象
- * @returns Promise
- */
-function getEnvPrograme (wx: ToolTypes.WxTypes) {
-  return new Promise(resolve => {
-    const ua = navigator.userAgent.toLowerCase()
-    if (ua.match(/MicroMessenger/i) && ~(ua.match(/MicroMessenger/i)!).indexOf('micromessenger')) {
-      wx.miniProgram.getEnv(res => {
-        if (res.miniprogram) {
-          return resolve('wx')
-        } else {
-          return resolve('wx_browser')
-        }
-      })
-    } else {
-      return resolve('web')
-    }
-  })
 }
 
 /**
@@ -348,7 +247,7 @@ function getEnvPrograme (wx: ToolTypes.WxTypes) {
  * @param data 数据对象
  * @returns 数据类型 string
  */
-function getType<T> (data: T) {
+function getDataType<T> (data: T) {
   return Object.prototype.toString.call(data).slice(8, -1).toLowerCase()
 }
 
@@ -358,7 +257,7 @@ function getType<T> (data: T) {
  * @returns 深拷贝后的数据对象
  */
 function deepClone (data: any) {
-  const type = getType(data)
+  const type = getDataType(data)
   let newData: any
   if (type === 'object') {
     newData = {}
@@ -376,11 +275,26 @@ function deepClone (data: any) {
   return newData
 }
 
+/**
+ * 对象序列化 {a:1,b:2} => a=1&b=2
+ * @param query object 序列化对象
+ * @param encode boolean 是否编码
+ * @returns string 序列化处理
+ */
+function serialize (query: Record<string, unknown>, encode = true) {
+  if (getDataType(query) !== 'object') {
+    throw new Error('query must be a object')
+  }
+  return Object.keys(query)
+  .map((key) => `${key}=${encode ? encodeURIComponent(query[key] + '') : (query[key] + '')}`)
+  .join('&')
+}
+
+
 export default {
   computedCoordDistance,
   uniqueBy,
   sortBy,
-  isMobile,
   delay,
   convertArray,
   debounce,
@@ -389,12 +303,10 @@ export default {
   checkPhone,
   isSupportCSS,
   getQueryString,
+  getHashQueryString,
   formatTime,
   numZeroPadding,
-  getNetworkType,
-  getOS,
-  getOSVersion,
-  getEnvPrograme,
-  getType,
-  deepClone
+  getDataType,
+  deepClone,
+  serialize
 }
