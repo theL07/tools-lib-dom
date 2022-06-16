@@ -2,7 +2,7 @@
  * @Description: 浏览器相关
  * @Author: theL07
  * @Date: 2022-06-16 17:55:57
- * @LastEditTime: 2022-06-16 21:43:18
+ * @LastEditTime: 2022-06-17 00:02:59
  * @LastEditors: theL07
  */
 import NavigatorTypes from '../types/navigator'

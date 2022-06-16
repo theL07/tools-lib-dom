@@ -2,7 +2,7 @@
  * @Description: 文件类
  * @Author: theL07
  * @Date: 2022-06-16 18:50:59
- * @LastEditTime: 2022-06-16 19:58:33
+ * @LastEditTime: 2022-06-16 23:39:11
  * @LastEditors: theL07
  */
 function checkFileName (fileName: string, list: string[]) {

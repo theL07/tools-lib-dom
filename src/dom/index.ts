@@ -2,7 +2,7 @@
  * @Description: DOM操作相关
  * @Author: theL07
  * @Date: 2022-06-16 19:08:45
- * @LastEditTime: 2022-06-16 21:49:50
+ * @LastEditTime: 2022-06-17 00:02:48
  * @LastEditors: theL07
  */
 import DomTypes from '../types/dom'

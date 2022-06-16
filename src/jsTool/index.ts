@@ -2,10 +2,10 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-16 21:37:05
+ * @LastEditTime: 2022-06-17 00:16:24
  * @LastEditors: theL07
  */
-import ToolTypes from '../types/tools'
+import ToolTypes from '../types/jsTools'
 /**
  * 根据坐标计算二者距离
  * @param startCoord 起点坐标 {lat: number, lng: number}
@@ -106,38 +106,6 @@ function convertArray<T> (arr: T[], row?: number) {
   return result
 }
 
-/**
- * 防抖函数
- * @param fn 函数 Function
- * @param delay 延时时间 ms number
- */
-function debounce (fn: Function, delay = 500) {
-  let timer: ReturnType<typeof setTimeout>
-  return  function (...args: unknown[]) {
-    if (timer) {
-      clearTimeout(timer)
-    }
-    timer = setTimeout(() => {
-      fn.apply(this, args)
-    }, delay)
-  }
-}
-
-/**
- * 节流函数
- * @param fn 函数 Function
- * @param delay 节流时长 ms number
- */
- function throttle (fn: Function, delay = 500) {
-  let lastTime = 0
-  return function (...args: unknown[]) {
-    const now = Date.now()
-    if (now - lastTime > delay) {
-      lastTime = now
-      fn.apply(this, args)
-    }
-  }
-}
 
 /**
  * 校验姓名(包含中文、英文、空格)
@@ -297,8 +265,6 @@ export default {
   sortBy,
   delay,
   convertArray,
-  debounce,
-  throttle,
   checkName,
   checkPhone,
   isSupportCSS,
