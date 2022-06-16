@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-13 21:19:31
+ * @LastEditTime: 2022-06-16 11:14:00
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/tools'
@@ -343,6 +343,39 @@ function getEnvPrograme (wx: ToolTypes.WxTypes) {
   })
 }
 
+/**
+ * 获取数据的类型
+ * @param data 数据对象
+ * @returns 数据类型 string
+ */
+function getType<T> (data: T) {
+  return Object.prototype.toString.call(data).slice(8, -1).toLowerCase()
+}
+
+/**
+ * 深拷贝
+ * @param data 数据对象
+ * @returns 深拷贝后的数据对象
+ */
+function deepClone (data: any) {
+  const type = getType(data)
+  let newData: any
+  if (type === 'object') {
+    newData = {}
+    for (const i in data) {
+      newData[i] = deepClone(data[i])
+    }
+  } else if (type === 'array') {
+    newData = []
+    for (let i = 0; i < data.length; i++) {
+      newData.push(deepClone(data[i]))
+  }
+  } else {
+    newData = data
+  }
+  return newData
+}
+
 export default {
   computedCoordDistance,
   uniqueBy,
@@ -361,5 +394,7 @@ export default {
   getNetworkType,
   getOS,
   getOSVersion,
-  getEnvPrograme
+  getEnvPrograme,
+  getType,
+  deepClone
 }
