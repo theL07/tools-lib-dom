@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-17 00:16:24
+ * @LastEditTime: 2022-06-17 10:52:12
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/jsTools'
@@ -12,9 +12,9 @@ import ToolTypes from '../types/jsTools'
  * @param endCoord 中点坐标 { lat: number, lng: number }
  * @returns distance 距离 number
  */
-function computedCoordDistance (startCoord: ToolTypes.Coordinates, endCoord: ToolTypes.Coordinates) {
-  const {lat: lat1, lng: lng1} = startCoord
-  const {lat: lat2, lng: lng2} = endCoord
+function computedCoordDistance(startCoord: ToolTypes.Coordinates, endCoord: ToolTypes.Coordinates) {
+  const { lat: lat1, lng: lng1 } = startCoord
+  const { lat: lat2, lng: lng2 } = endCoord
   const PI = Math.PI
   const EARTH_RADIUS = 6378137.0
   function getRad(d: number) {
@@ -50,7 +50,7 @@ function computedCoordDistance (startCoord: ToolTypes.Coordinates, endCoord: Too
  * @param time 延迟时间 ms number
  * @returns Promise
  */
-function delay (time = 800): Promise<void> {
+function delay(time = 800): Promise<void> {
   return new Promise((resolve) => {
     const timer = setTimeout(() => {
       clearTimeout(timer)
@@ -65,22 +65,22 @@ function delay (time = 800): Promise<void> {
  * @param key 字段名
  * @returns arr 去重数组 [{}]
  */
-function uniqueBy<T extends Record<string, unknown>> (arr: T[], key = 'name') {
+function uniqueBy<T extends Record<string, unknown>>(arr: T[], key = 'name') {
   const res = new Map()
-  const result = arr.filter(item => item[key])
-  return result.filter(item => {
+  const result = arr.filter((item) => item[key])
+  return result.filter((item) => {
     !res.has(item[key]) && res.set(item[key], 1)
   })
 }
 
 /**
- * 
+ *
  * @param arr 数组 [{}]
  * @param key 字段名
  * @param isFalling 是否降序 boolean
  * @returns arr 排序后数组
  */
-function sortBy<T extends Record<string, unknown>> (arr: T[], key = 'name', isFalling = false) {
+function sortBy<T extends Record<string, unknown>>(arr: T[], key = 'name', isFalling = false) {
   return arr.sort((a, b) => {
     const numA = Number(a[key])
     const numB = Number(b[key])
@@ -94,18 +94,17 @@ function sortBy<T extends Record<string, unknown>> (arr: T[], key = 'name', isFa
  * @param row 合并数量 number
  * @returns 转为二维数组 [[], [], []]
  */
-function convertArray<T> (arr: T[], row?: number) {
+function convertArray<T>(arr: T[], row?: number) {
   if (!arr.length) {
     return []
   }
   const result: T[][] = []
   row = row || 2
-  for (let i = 0; i < arr.length; i += row) {
+  for (let i = 0;i < arr.length;i += row) {
     result.push(arr.slice(i, i + row))
   }
   return result
 }
-
 
 /**
  * 校验姓名(包含中文、英文、空格)
@@ -114,7 +113,7 @@ function convertArray<T> (arr: T[], row?: number) {
  * @param max 最大有效字符长度
  * @returns boolean
  */
-function checkName (name: string, min = 1, max = 20) {
+function checkName(name: string, min = 1, max = 20) {
   name = name.trim()
   const reg = new RegExp(`^[\\u4E00-\\u9FA5_a-zA-Z\\s]{${min},${max}}$`)
   return reg.test(name)
@@ -125,7 +124,7 @@ function checkName (name: string, min = 1, max = 20) {
  * @param phone 手机号 string
  * @returns boolean
  */
-function checkPhone (phone: string) {
+function checkPhone(phone: string) {
   phone = phone.trim()
   const reg = /^1[3456789]\d{9}$/
   return reg.test(phone)
@@ -136,7 +135,7 @@ function checkPhone (phone: string) {
  * @param attribute 属性名 string
  * @returns boolean
  */
-function isSupportCSS (attribute: string) {
+function isSupportCSS(attribute: string) {
   if (window.CSS && window.CSS.supports) {
     return window.CSS.supports(attribute)
   }
@@ -154,7 +153,7 @@ function isSupportCSS (attribute: string) {
  * @param name 名称 string
  * @returns string | null
  */
-function getQueryString (name: string) {
+function getQueryString(name: string) {
   const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
   const r = window.location.search.substring(1).match(reg)
   if (r != null) return decodeURIComponent(r[2])
@@ -162,7 +161,7 @@ function getQueryString (name: string) {
 }
 
 // 获取URL hash后参数
-function getHashQueryString (name: string) {
+function getHashQueryString(name: string) {
   const after = window.location.href.split('?')[1]
   if (after) {
     const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
@@ -178,12 +177,8 @@ function getHashQueryString (name: string) {
  * @param data 数据对象
  * @returns string
  */
-function formatTime (data: ToolTypes.FormatTimeType) {
-  const {
-    date,
-    format = 'yyyy-MM-dd',
-    link = '-'
-  } = data
+function formatTime(data: ToolTypes.FormatTimeType) {
+  const { date, format = 'yyyy-MM-dd', link = '-' } = data
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -199,14 +194,13 @@ function formatTime (data: ToolTypes.FormatTimeType) {
   }
 }
 
-
 /**
  * 对数字进行指定长度补0操作
  * @param n 数字
  * @param length 字符长度
  * @returns string '01' '008'
  */
-function numZeroPadding (n: number, length = 2) {
+function numZeroPadding(n: number, length = 2) {
   return (Array(length).join('0') + n).slice(-length)
 }
 
@@ -215,7 +209,7 @@ function numZeroPadding (n: number, length = 2) {
  * @param data 数据对象
  * @returns 数据类型 string
  */
-function getDataType<T> (data: T) {
+function getDataType<T>(data: T) {
   return Object.prototype.toString.call(data).slice(8, -1).toLowerCase()
 }
 
@@ -224,7 +218,7 @@ function getDataType<T> (data: T) {
  * @param data 数据对象
  * @returns 深拷贝后的数据对象
  */
-function deepClone (data: any) {
+function deepClone(data: any) {
   const type = getDataType(data)
   let newData: any
   if (type === 'object') {
@@ -234,9 +228,9 @@ function deepClone (data: any) {
     }
   } else if (type === 'array') {
     newData = []
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0;i < data.length;i++) {
       newData.push(deepClone(data[i]))
-  }
+    }
   } else {
     newData = data
   }
@@ -249,15 +243,65 @@ function deepClone (data: any) {
  * @param encode boolean 是否编码
  * @returns string 序列化处理
  */
-function serialize (query: Record<string, unknown>, encode = true) {
+function serialize(query: Record<string, unknown>, encode = true) {
   if (getDataType(query) !== 'object') {
     throw new Error('query must be a object')
   }
   return Object.keys(query)
-  .map((key) => `${key}=${encode ? encodeURIComponent(query[key] + '') : (query[key] + '')}`)
-  .join('&')
+    .map((key) => `${key}=${encode ? encodeURIComponent(query[key] + '') : query[key] + ''}`)
+    .join('&')
 }
 
+/**
+ * 防抖函数
+ * @param fn 需要执行的函数
+ * @param time 间隔时间
+ * @returns
+ */
+function debounce(fn: () => void, time = 800) {
+  let timeout: number | null = null
+  return function () {
+    timeout && clearTimeout(timeout)
+    timeout = setTimeout(fn, time)
+  }
+}
+
+/**
+ * 节流函数
+ * @param fn 需要执行的函数
+ * @param time 间隔时间
+ * @returns
+ */
+function throttle(fn: () => void, time = 800) {
+  let canRun: boolean = true
+  let timeout: number | null = null
+  return function () {
+    if (!canRun) return
+    canRun = false
+    timeout = setTimeout(() => {
+      fn()
+      canRun = true
+      timeout && clearTimeout(timeout)
+    }, time)
+  }
+}
+
+/**
+ * 设置uuid
+ * @returns string uuid
+ */
+function setUUID() {
+  let d = new Date().getTime()
+  if (window.performance && typeof window.performance.now === "function") {
+    d += performance.now()
+  }
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0
+    d = Math.floor(d / 16)
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+  })
+  return uuid
+}
 
 export default {
   computedCoordDistance,
@@ -274,5 +318,8 @@ export default {
   numZeroPadding,
   getDataType,
   deepClone,
-  serialize
+  serialize,
+  debounce,
+  throttle,
+  setUUID
 }

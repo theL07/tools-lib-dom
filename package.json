@@ -6,6 +6,12 @@
   "types": "./index.d.ts",
   "author": "thel07",
   "license": "ISC",
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    "DOM",
+    "tools"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
