@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-17 10:52:12
+ * @LastEditTime: 2022-06-18 20:55:44
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/jsTools'
@@ -218,23 +218,130 @@ function getDataType<T>(data: T) {
  * @param data 数据对象
  * @returns 深拷贝后的数据对象
  */
-function deepClone(data: any) {
-  const type = getDataType(data)
-  let newData: any
-  if (type === 'object') {
-    newData = {}
-    for (const i in data) {
-      newData[i] = deepClone(data[i])
-    }
-  } else if (type === 'array') {
-    newData = []
-    for (let i = 0;i < data.length;i++) {
-      newData.push(deepClone(data[i]))
-    }
-  } else {
-    newData = data
+function deepClone(data: any, map = new WeakMap()) {
+  function getInit(data: any) {
+    const Ctor = data.constructor
+    return new Ctor()
   }
-  return newData
+  function isObject(data: any) {
+    const type = typeof data;
+    return data !== null && (type === 'object' || type === 'function')
+  }
+
+  function forEach(array: [], callback: (item: any, index: number) => void) {
+    let index = -1;
+    const length = array.length;
+    while (++index < length) {
+      callback(array[index], index)
+    }
+    return array
+  }
+
+  function cloneSymbol(data: Symbol) {
+    return Object(Symbol.prototype.valueOf.call(data))
+  }
+
+
+  function cloneReg(data: any) {
+    const reFlags = /\w*$/
+    const result = new data.constructor(data.source, reFlags.exec(data))
+    result.lastIndex = data.lastIndex
+    return result
+  }
+
+  function cloneFunction(func: Function) {
+    const bodyReg = /(?<={)(.|\n)+(?=})/m;
+    const paramReg = /(?<=\().+(?=\)\s+{)/
+    const funcString = func.toString()
+    if (func.prototype) {
+      const param = paramReg.exec(funcString)
+      const body = bodyReg.exec(funcString)
+      if (body) {
+        if (param) {
+          const paramArr = param[0].split(',')
+          return new Function(...paramArr, body[0])
+        } else {
+          return new Function(body[0])
+        }
+      } else {
+        return null
+      }
+    } else {
+      return eval(funcString)
+    }
+  }
+
+  function cloneOtherType(data: any, type: string) {
+    const Ctor = data.constructor;
+    switch (type) {
+      case 'boolean':
+      case 'number':
+      case 'string':
+      case 'error':
+      case 'date':
+        return new Ctor(data)
+      case 'regexp':
+        return cloneReg(data)
+      case 'symbol':
+        return cloneSymbol(data)
+      case 'function':
+        return cloneFunction(data)
+      default:
+        return null;
+    }
+  }
+
+
+  if (!isObject(data)) {
+    return data
+  }
+
+  const type = getDataType(data)
+  let cloneTarget: any
+  let newData: any
+
+  const deepTag = [
+    'map',
+    'set',
+    'array',
+    'object',
+    'arguments',
+  ]
+  if (~deepTag.indexOf(type)) {
+    cloneTarget = getInit(data)
+  } else {
+    cloneTarget = cloneOtherType(data, type)
+  }
+
+  if (map.get(data)) {
+    return map.get(data)
+  }
+
+  map.set(data, cloneTarget)
+
+  if (type === 'set') {
+    cloneTarget = new Set()
+    data.forEach((item: any) => {
+      cloneTarget.add(deepClone(item, map))
+    })
+    return cloneTarget
+  }
+
+  if (type === 'map') {
+    data.forEach((item: any, key: any) => {
+      cloneTarget.set(key, deepClone(item, map))
+    })
+    return cloneTarget
+  }
+
+  const keys = type === 'array' ? undefined : Object.keys(data)
+  forEach(keys || data, (value, key) => {
+    if (keys) {
+      key = value
+    }
+    cloneTarget[key] = deepClone(data[key], map)
+  })
+  return cloneTarget
 }
 
 /**
