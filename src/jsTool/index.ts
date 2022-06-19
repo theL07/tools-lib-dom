@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-18 20:55:44
+ * @LastEditTime: 2022-06-19 13:15:24
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/jsTools'
@@ -298,7 +298,6 @@ function deepClone(data: any, map = new WeakMap()) {
 
   const type = getDataType(data)
   let cloneTarget: any
-  let newData: any
 
   const deepTag = [
     'map',
