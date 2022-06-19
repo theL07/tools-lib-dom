@@ -2,7 +2,7 @@
  * @Description: 浏览器相关
  * @Author: theL07
  * @Date: 2022-06-16 17:55:57
- * @LastEditTime: 2022-06-17 00:02:59
+ * @LastEditTime: 2022-06-20 01:32:00
  * @LastEditors: theL07
  */
 import NavigatorTypes from '../types/navigator'
@@ -143,11 +143,31 @@ function applyLocation (successFn: Function, errorFn?: Function) {
   }
 }
 
+/**
+ * 监听浏览器窗口激活状态
+ * @param activeCallback 函数  激活回调
+ * @param inactiveCallback 函数 隐藏回调
+ */
+function watchActive (activeCallback: Function, inactiveCallback: Function) {
+  if (!window) {
+    throw new Error('window is not defined')
+  }
+  function onVisibilityChange () {
+    if (document.visibilityState === 'visible') {
+      activeCallback()
+    } else {
+      inactiveCallback()
+    }
+  }
+  window.addEventListener('visibilitychange', onVisibilityChange)
+}
+
 export default {
   getOS,
   getOSVersion,
   getNetworkType,
   isWXPrograme,
   isMobile,
-  applyLocation
+  applyLocation,
+  watchActive
 }
