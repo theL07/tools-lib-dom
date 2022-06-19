@@ -2,7 +2,7 @@
  * @Description: 浏览器相关
  * @Author: theL07
  * @Date: 2022-06-16 17:55:57
- * @LastEditTime: 2022-06-20 01:32:00
+ * @LastEditTime: 2022-06-20 01:40:13
  * @LastEditors: theL07
  */
 import NavigatorTypes from '../types/navigator'
@@ -149,8 +149,8 @@ function applyLocation (successFn: Function, errorFn?: Function) {
  * @param inactiveCallback 函数 隐藏回调
  */
 function watchActive (activeCallback: Function, inactiveCallback: Function) {
-  if (!window) {
-    throw new Error('window is not defined')
+  if (!document) {
+    throw new Error('document is not defined')
   }
   function onVisibilityChange () {
     if (document.visibilityState === 'visible') {
@@ -159,7 +159,7 @@ function watchActive (activeCallback: Function, inactiveCallback: Function) {
       inactiveCallback()
     }
   }
-  window.addEventListener('visibilitychange', onVisibilityChange)
+  document.addEventListener('visibilitychange', onVisibilityChange)
 }
 
 export default {
