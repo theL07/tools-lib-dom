@@ -2,7 +2,7 @@
  * @Description: DOM操作相关
  * @Author: theL07
  * @Date: 2022-06-16 19:08:45
- * @LastEditTime: 2022-06-17 00:02:48
+ * @LastEditTime: 2022-06-21 16:08:30
  * @LastEditors: theL07
  */
 import DomTypes from '../types/dom'
@@ -150,6 +150,24 @@ function imgToBase64(imgURL: string, callback?: Function, options?: DomTypes.Img
   }
 }
 
+/**
+ * 判断是否支持某个CSS属性
+ * @param attribute 属性名 string
+ * @returns boolean
+ */
+ function isSupportCSS(attribute: string) {
+  if (window.CSS && window.CSS.supports) {
+    return window.CSS.supports(attribute)
+  }
+  const elem = document.createElement('div')
+  if (attribute in elem.style) {
+    document.removeChild(elem)
+    return true
+  }
+  document.removeChild(elem)
+  return false
+}
+
 export default {
   hasClass,
   addClass,
@@ -159,5 +177,6 @@ export default {
   copyText,
   dataURItoBuffer,
   dataURLtoBlob,
-  imgToBase64
+  imgToBase64,
+  isSupportCSS
 }

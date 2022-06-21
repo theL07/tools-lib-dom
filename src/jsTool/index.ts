@@ -2,7 +2,7 @@
  * @Description: 方法库
  * @Author: theL07
  * @Date: 2022-06-11 14:12:09
- * @LastEditTime: 2022-06-19 13:15:24
+ * @LastEditTime: 2022-06-21 16:08:06
  * @LastEditors: theL07
  */
 import ToolTypes from '../types/jsTools'
@@ -131,21 +131,12 @@ function checkPhone(phone: string) {
 }
 
 /**
- * 判断是否支持某个CSS属性
- * @param attribute 属性名 string
- * @returns boolean
+ * 隐藏手机号中间四位
+ * @param phone 手机号 string
+ * @returns string 1xx **** xxxx
  */
-function isSupportCSS(attribute: string) {
-  if (window.CSS && window.CSS.supports) {
-    return window.CSS.supports(attribute)
-  }
-  const elem = document.createElement('div')
-  if (attribute in elem.style) {
-    document.removeChild(elem)
-    return true
-  }
-  document.removeChild(elem)
-  return false
+function hidePhone(phone: string) {
+  return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 }
 
 /**
@@ -417,7 +408,7 @@ export default {
   convertArray,
   checkName,
   checkPhone,
-  isSupportCSS,
+  hidePhone,
   getQueryString,
   getHashQueryString,
   formatTime,
